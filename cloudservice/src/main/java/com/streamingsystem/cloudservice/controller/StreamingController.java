@@ -1,6 +1,8 @@
 package com.streamingsystem.cloudservice.controller;
 
 import com.streamingsystem.cloudservice.dto.FileObjectDTO;
+import com.streamingsystem.cloudservice.dto.ImageObjectDTO;
+import com.streamingsystem.cloudservice.dto.VideoObjectDTO;
 import com.streamingsystem.cloudservice.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -21,7 +23,7 @@ public class StreamingController {
     private final StorageService storageService;
 
     @PostMapping(
-            value = "/upload",
+            value = "/upload/file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<String> uploadFile(
@@ -36,6 +38,46 @@ public class StreamingController {
         );
 
         String key = storageService.uploadFile(fileObjectDTO);
+
+        return ResponseEntity.ok(key);
+    }
+
+    @PostMapping(
+            value = "/upload/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<String> uploadImage(
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+
+        ImageObjectDTO imageObjectDTO = new ImageObjectDTO(
+                file.getOriginalFilename(),
+                file.getContentType(),
+                file.getSize(),
+                file.getInputStream()
+        );
+
+        String key = storageService.uploadImage(imageObjectDTO);
+
+        return ResponseEntity.ok(key);
+    }
+
+    @PostMapping(
+            value = "/upload/video",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<String> uploadVideo(
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+
+        VideoObjectDTO videoObjectDTO = new VideoObjectDTO(
+                file.getOriginalFilename(),
+                file.getContentType(),
+                file.getSize(),
+                file.getInputStream()
+        );
+
+        String key = storageService.uploadVideo(videoObjectDTO);
 
         return ResponseEntity.ok(key);
     }

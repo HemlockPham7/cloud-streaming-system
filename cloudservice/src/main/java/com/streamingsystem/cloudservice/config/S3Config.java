@@ -32,26 +32,19 @@ public class S3Config {
     @Bean
     public S3AsyncClient s3AsyncClient() {
         return S3AsyncClient.builder()
-                .endpointOverride(
-                        URI.create("http://localhost:4566")
-                )
-                .region(Region.AP_SOUTHEAST_1)
+                .endpointOverride(URI.create(endpoint))
+                .region(Region.of(region))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(
-                                        "test",
-                                        "test"
-                                )
+                                AwsBasicCredentials.create(accessKey, secretKey)
                         )
                 )
-                .forcePathStyle(true)
+                .forcePathStyle(pathStyleAccessEnabled)
                 .build();
     }
 
     @Bean
-    public S3TransferManager s3TransferManager(
-            S3AsyncClient s3AsyncClient
-    ) {
+    public S3TransferManager s3TransferManager(S3AsyncClient s3AsyncClient) {
         return S3TransferManager.builder()
                 .s3Client(s3AsyncClient)
                 .build();
