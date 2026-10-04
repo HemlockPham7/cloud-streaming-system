@@ -1,4 +1,4 @@
-package com.streamingsystem.cloudservice.scheduler;
+package com.streamingsystem.cloudservice.scheduler.sales;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +16,12 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JobScheduler {
+public class SalesJobScheduler {
 
     private final Job dbToFileJob;
     private final JobOperator jobOperator;
 
-    @Scheduled(cron = "0/30 * * * * *")
+    @Scheduled(cron = "0 0 23 * * *")
     public void trigger() throws Exception {
 
         String fileName = LocalDate.now()

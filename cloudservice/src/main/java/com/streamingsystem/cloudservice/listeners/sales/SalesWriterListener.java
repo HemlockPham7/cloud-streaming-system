@@ -1,4 +1,4 @@
-package com.streamingsystem.cloudservice.listeners;
+package com.streamingsystem.cloudservice.listeners.sales;
 
 
 import com.streamingsystem.cloudservice.dto.SalesDTO;

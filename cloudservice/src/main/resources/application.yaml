@@ -5,6 +5,11 @@ spring:
   application:
     name: cloudservice
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   datasource:
     url: jdbc:postgresql://localhost:5432/streaming
     username: admin
@@ -30,6 +35,23 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: always
+
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-1
+
+      credentials:
+        access-key: test
+        secret-key: test
+
+      s3:
+        endpoint: http://localhost:4566
+        region: ap-southeast-1
+        path-style-access-enabled: true
+
+      bucket:
+        name: sales-info
 
 springdoc:
   api-docs:

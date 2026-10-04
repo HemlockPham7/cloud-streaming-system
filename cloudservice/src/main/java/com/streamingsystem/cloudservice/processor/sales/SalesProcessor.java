@@ -1,4 +1,4 @@
-package com.streamingsystem.cloudservice.processor;
+package com.streamingsystem.cloudservice.processor.sales;
 
 import com.streamingsystem.cloudservice.dto.SalesDTO;
 import lombok.extern.slf4j.Slf4j;
