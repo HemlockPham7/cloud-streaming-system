@@ -1,8 +1,8 @@
-package com.streamingsystem.cloudservice.batchjob;
+package com.streamingsystem.cloudservice.batchjob.sales;
 
 import com.streamingsystem.cloudservice.dto.SalesDTO;
-import com.streamingsystem.cloudservice.listeners.SalesWriterListener;
-import com.streamingsystem.cloudservice.processor.SalesProcessor;
+import com.streamingsystem.cloudservice.listeners.sales.SalesWriterListener;
+import com.streamingsystem.cloudservice.processor.sales.SalesProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.Job;
