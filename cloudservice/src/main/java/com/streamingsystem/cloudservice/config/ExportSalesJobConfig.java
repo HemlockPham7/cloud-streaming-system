@@ -4,18 +4,22 @@ import com.streamingsystem.cloudservice.dto.SalesDTO;
 import com.streamingsystem.cloudservice.listeners.SalesWriterListener;
 import com.streamingsystem.cloudservice.processor.SalesProcessor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.job.parameters.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.infrastructure.item.database.JdbcCursorItemReader;
+import org.springframework.batch.infrastructure.item.database.JdbcPagingItemReader;
+import org.springframework.batch.infrastructure.item.database.Order;
+import org.springframework.batch.infrastructure.item.database.PagingQueryProvider;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.infrastructure.item.database.builder.JdbcPagingItemReaderBuilder;
+import org.springframework.batch.infrastructure.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.infrastructure.item.file.FlatFileItemWriter;
 import org.springframework.batch.infrastructure.item.file.builder.FlatFileItemWriterBuilder;
+import org.springframework.batch.infrastructure.support.DatabaseType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +28,7 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,7 +37,7 @@ public class ExportSalesJobConfig {
     private static final String JOB_NAME = "ExportDataFromDBToFileJob";
     private static final String STEP_NAME = "fromSalesTableToFile";
 
-    private static final int CHUNK_SIZE = 10;
+    private static final int CHUNK_SIZE = 2000;
 
     private static final String SELECT_CLAUSE = """
             SELECT
@@ -61,11 +66,11 @@ public class ExportSalesJobConfig {
     }
 
     @Bean
-    public Step fromSalesTableToFile(JdbcCursorItemReader<SalesDTO> salesDTOJdbcCursorItemReader, FlatFileItemWriter<SalesDTO> flatFileItemWriter) {
+    public Step fromSalesTableToFile(JdbcPagingItemReader<SalesDTO> salesJdbcPagingItemReader, FlatFileItemWriter<SalesDTO> flatFileItemWriter) {
         return new StepBuilder(STEP_NAME, jobRepository)
                 .<SalesDTO, SalesDTO>chunk(CHUNK_SIZE)
                 .transactionManager(transactionManager)
-                .reader(salesDTOJdbcCursorItemReader)
+                .reader(salesJdbcPagingItemReader)
                 .processor(processor)
                 .writer(flatFileItemWriter)
                 .listener(salesWriterListener)
@@ -81,6 +86,29 @@ public class ExportSalesJobConfig {
                 .fetchSize(CHUNK_SIZE)
                 .rowMapper(new DataClassRowMapper<>(SalesDTO.class))
                 .build();
+    }
+
+    @Bean
+    public JdbcPagingItemReader<SalesDTO> salesJdbcPagingItemReader(PagingQueryProvider queryProvider) throws Exception {
+        return new JdbcPagingItemReaderBuilder<SalesDTO>()
+                .name("salesPagingReader")
+                .dataSource(dataSource)
+                .queryProvider(queryProvider)
+                .rowMapper(new DataClassRowMapper<>(SalesDTO.class))
+                .pageSize(25)
+                .build();
+    }
+
+    @Bean
+    public SqlPagingQueryProviderFactoryBean queryProvider(){
+        SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
+        queryProvider.setSelectClause("SELECT sale_id, product_id, customer_id, sale_date, sale_amount, store_location, country");
+        queryProvider.setFromClause("FROM Sales");
+        queryProvider.setWhereClause("WHERE processed = false");
+        queryProvider.setDataSource(dataSource);
+        queryProvider.setDatabaseType(DatabaseType.POSTGRES.name());
+        queryProvider.setSortKeys(Collections.singletonMap("sale_id", Order.ASCENDING));
+        return queryProvider;
     }
 
     @Bean
