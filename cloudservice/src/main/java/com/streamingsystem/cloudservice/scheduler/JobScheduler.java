@@ -30,11 +30,14 @@ public class JobScheduler {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("output.file.name", fileName)
-                .addDate("processed", new Date())
+                .addDate("run.timestamp", new Date())
                 .toJobParameters();
+
+        log.info("Job parameters before start: {}", jobParameters);
 
         JobExecution jobExecution = jobOperator.start(dbToFileJob, jobParameters);
 
         log.info("Started job: {}, executionId: {}", dbToFileJob.getName(), jobExecution.getId());
+        log.info("Job execution parameters: {}", jobExecution.getJobParameters());
     }
 }
