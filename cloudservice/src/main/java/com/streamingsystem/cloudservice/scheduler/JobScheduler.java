@@ -21,7 +21,7 @@ public class JobScheduler {
     private final Job dbToFileJob;
     private final JobOperator jobOperator;
 
-    @Scheduled(cron = "0/30 * * * * *")
+    @Scheduled(cron = "0 0 23 * * *")
     public void trigger() throws Exception {
 
         String fileName = LocalDate.now()

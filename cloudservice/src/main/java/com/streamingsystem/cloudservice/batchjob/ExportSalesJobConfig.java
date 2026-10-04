@@ -1,4 +1,4 @@
-package com.streamingsystem.cloudservice.config;
+package com.streamingsystem.cloudservice.batchjob;
 
 import com.streamingsystem.cloudservice.dto.SalesDTO;
 import com.streamingsystem.cloudservice.listeners.SalesWriterListener;
@@ -57,11 +57,13 @@ public class ExportSalesJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final SalesWriterListener salesWriterListener;
+//    private final UploadFileToS3Step uploadFileToS3Step;
 
     @Bean
-    public Job dbToFileJob(Step fromSalesTableToFile) {
+    public Job dbToFileJob(Step fromSalesTableToFile, Step uploadFileToS3) {
         return new JobBuilder(JOB_NAME, jobRepository)
                 .start(fromSalesTableToFile)
+//                .next(uploadFileToS3)
                 .build();
     }
 
@@ -135,4 +137,11 @@ public class ExportSalesJobConfig {
                 .append(Boolean.TRUE)
                 .build();
     }
+
+//    @Bean
+//    public Step uploadFileToS3() {
+//        return new TaskletStepBuilder(new StepBuilder("uploadFileToS3", jobRepository))
+//                .tasklet(uploadFileToS3Step, transactionManager)
+//                .build();
+//    }
 }
