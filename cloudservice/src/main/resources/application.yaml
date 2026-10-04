@@ -52,7 +52,10 @@ spring:
         path-style-access-enabled: true
 
       bucket:
-        name: sales-info
+        sales:
+          name: sales-info
+        process:
+          name: process-image
 
 springdoc:
   api-docs:

@@ -25,7 +25,7 @@ public class StorageServiceImpl implements StorageService {
     private static final String BUCKET_FOLDER_FOR_VIDEOS = "videos";
     private final S3TransferManager s3TransferManager;
 
-    @Value("${spring.cloud.aws.bucket.name}")
+    @Value("${spring.cloud.aws.bucket.sales.name}")
     private String bucket;
 
     @Override
