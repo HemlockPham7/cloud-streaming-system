@@ -1,6 +1,7 @@
 package com.streamingsystem.cloudservice.config;
 
 import com.streamingsystem.cloudservice.dto.SalesDTO;
+import com.streamingsystem.cloudservice.listeners.SalesWriterListener;
 import com.streamingsystem.cloudservice.processor.SalesProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -50,23 +51,24 @@ public class ExportSalesJobConfig {
     private final SalesProcessor processor;
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+    private final SalesWriterListener salesWriterListener;
 
     @Bean
     public Job dbToFileJob(Step fromSalesTableToFile) {
         return new JobBuilder(JOB_NAME, jobRepository)
-                .incrementer(new RunIdIncrementer())
                 .start(fromSalesTableToFile)
                 .build();
     }
 
     @Bean
-    public Step fromSalesTableToFile(FlatFileItemWriter<SalesDTO> flatFileItemWriter) {
+    public Step fromSalesTableToFile(JdbcCursorItemReader<SalesDTO> salesDTOJdbcCursorItemReader, FlatFileItemWriter<SalesDTO> flatFileItemWriter) {
         return new StepBuilder(STEP_NAME, jobRepository)
                 .<SalesDTO, SalesDTO>chunk(CHUNK_SIZE)
                 .transactionManager(transactionManager)
-                .reader(salesDTOJdbcCursorItemReader())
+                .reader(salesDTOJdbcCursorItemReader)
                 .processor(processor)
                 .writer(flatFileItemWriter)
+                .listener(salesWriterListener)
                 .build();
     }
 

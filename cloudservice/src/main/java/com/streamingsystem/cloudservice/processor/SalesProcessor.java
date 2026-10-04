@@ -17,4 +17,11 @@ public class SalesProcessor implements ItemProcessor<SalesDTO, SalesDTO> {
         }
         return item;
     }
+
+    // Processor is used for :
+    //validate
+    //transform data
+    //enrich data
+    //filter data
+    //business logic on each item
 }
