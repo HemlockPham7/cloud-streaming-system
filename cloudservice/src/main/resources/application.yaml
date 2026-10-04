@@ -23,6 +23,7 @@ spring:
       hibernate:
         jdbc:
           time_zone: Asia/Ho_Chi_Minh
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
