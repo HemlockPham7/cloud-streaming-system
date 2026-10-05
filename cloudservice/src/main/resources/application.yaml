@@ -55,7 +55,7 @@ spring:
         sales:
           name: sales-info
         process:
-          name: process-image
+          name: process-s3-migration
 
 springdoc:
   api-docs:

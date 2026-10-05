@@ -99,7 +99,7 @@ public class ProcessUploadImageConfig {
 
         queryProvider.setWhereClause("""
             WHERE p.status IN ('COMPLETED', 'CANCELLED')
-              AND p.image IS NOT NULL
+              AND p.image_data IS NOT NULL
               AND m.process_id IS NULL
             """);
 
@@ -151,7 +151,7 @@ public class ProcessUploadImageConfig {
 
         queryProvider.setWhereClause("""
             WHERE p.status IN ('COMPLETED', 'CANCELLED')
-              AND p.image IS NOT NULL
+              AND p.image_data IS NOT NULL
             """);
 
         queryProvider.setDataSource(dataSource);
