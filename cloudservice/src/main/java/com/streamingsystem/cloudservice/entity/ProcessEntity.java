@@ -6,8 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.sql.Blob;
-
 @Entity
 @Table(name = "process")
 @Getter
@@ -24,10 +22,18 @@ public class ProcessEntity {
     @Column(length = 100)
     private String description;
 
-    @Lob
-    @JdbcTypeCode(SqlTypes.BINARY)
-    @Column(name = "image")
-    private Blob image;
+    @Column(name = "image_file_name", length = 255)
+    private String imageFileName;
+
+    @Column(name = "image_content_type", length = 100)
+    private String imageContentType;
+
+    @Column(name = "image_size")
+    private Long imageSize;
+
+    @JdbcTypeCode(SqlTypes.LONGVARBINARY)
+    @Column(name = "image_data", columnDefinition = "bytea")
+    private byte[] imageData;
 
     @Column(name = "status", length = 50)
     private String status;

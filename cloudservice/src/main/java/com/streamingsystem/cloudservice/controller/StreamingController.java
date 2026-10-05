@@ -5,6 +5,7 @@ import com.streamingsystem.cloudservice.dto.ImageObjectDTO;
 import com.streamingsystem.cloudservice.dto.VideoObjectDTO;
 import com.streamingsystem.cloudservice.service.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,9 @@ public class StreamingController {
 
     private final StorageService storageService;
 
+    @Value("${spring.cloud.aws.bucket.sales.name}")
+    private String bucket;
+
     @PostMapping(
             value = "/upload/file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -37,7 +41,7 @@ public class StreamingController {
                 file.getInputStream()
         );
 
-        String key = storageService.uploadFile(fileObjectDTO);
+        String key = storageService.uploadFile(bucket, fileObjectDTO);
 
         return ResponseEntity.ok(key);
     }
@@ -57,7 +61,7 @@ public class StreamingController {
                 file.getInputStream()
         );
 
-        String key = storageService.uploadImage(imageObjectDTO);
+        String key = storageService.uploadImage(bucket, imageObjectDTO);
 
         return ResponseEntity.ok(key);
     }
@@ -77,7 +81,7 @@ public class StreamingController {
                 file.getInputStream()
         );
 
-        String key = storageService.uploadVideo(videoObjectDTO);
+        String key = storageService.uploadVideo(bucket, videoObjectDTO);
 
         return ResponseEntity.ok(key);
     }

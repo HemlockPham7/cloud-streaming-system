@@ -14,5 +14,8 @@ public class ProcessDetailResponse {
     private String description;
     private String status;
     private String imageUrl;
-    private byte[] image;
+    private String imageContentType;
+    private String imageFileName;
+    private Long imageSize;
+    private byte[] imageData;
 }

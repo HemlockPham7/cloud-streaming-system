@@ -9,7 +9,6 @@ import com.streamingsystem.cloudservice.entity.ProcessS3MigrationEntity;
 import com.streamingsystem.cloudservice.repository.ProcessRepository;
 import com.streamingsystem.cloudservice.service.ProcessService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.engine.jdbc.proxy.BlobProxy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -18,9 +17,6 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.time.Duration;
 
 @Service
@@ -40,8 +36,10 @@ public class ProcessServiceImpl implements ProcessService {
                 .build();
 
         if (file != null && !file.isEmpty()) {
-            InputStream inputStream = file.getInputStream();
-            entity.setImage(BlobProxy.generateProxy(inputStream, file.getSize()));
+            entity.setImageData(file.getBytes());
+            entity.setImageContentType(file.getContentType());
+            entity.setImageSize(file.getSize());
+            entity.setImageFileName(file.getOriginalFilename());
         }
 
         ProcessEntity saved = processRepository.save(entity);
@@ -50,6 +48,9 @@ public class ProcessServiceImpl implements ProcessService {
                 .id(saved.getId())
                 .description(saved.getDescription())
                 .status(saved.getStatus())
+                .imageContentType(saved.getImageContentType())
+                .imageFileName(saved.getImageFileName())
+                .imageSize(saved.getImageSize())
                 .build();
     }
 
@@ -58,36 +59,29 @@ public class ProcessServiceImpl implements ProcessService {
         ProcessEntity process = processRepository.findById(processId)
                 .orElseThrow(() -> new RuntimeException("Process not found: " + processId));
 
+        ProcessDetailResponse processDetailResponse = ProcessDetailResponse.builder()
+                .id(process.getId())
+                .description(process.getDescription())
+                .status(process.getStatus())
+                .imageContentType(process.getImageContentType())
+                .imageFileName(process.getImageFileName())
+                .imageSize(process.getImageSize())
+                .build();
 
-        byte[] imageBytes = null;
-        String imageUrl = null;
-        if (process.getImage() != null) {
-            try {
-                Blob blob = process.getImage();
-                imageBytes = blob.getBytes(1, (int) blob.length());
-            } catch (SQLException e) {
-                throw new RuntimeException(
-                        "Failed to read image from database", e
-                );
-            }
+        if (process.getImageData() != null) {
+            processDetailResponse.setImageData(process.getImageData());
         } else {
             String status = process.getStatus();
             if ("COMPLETED".equalsIgnoreCase(status) || "CANCELLED".equalsIgnoreCase(status)) {
                 ProcessS3MigrationEntity migration = process.getS3Migration();
 
                 if (migration != null) {
-                    imageUrl = generatePresignedUrl(migration);
+                    processDetailResponse.setImageUrl(generatePresignedUrl(migration));
                 }
             }
         }
 
-        return ProcessDetailResponse.builder()
-                .id(process.getId())
-                .description(process.getDescription())
-                .status(process.getStatus())
-                .imageUrl(imageUrl)
-                .image(imageBytes)
-                .build();
+        return processDetailResponse;
     }
 
     private String generatePresignedUrl(ProcessS3MigrationEntity migration) {
@@ -126,6 +120,9 @@ public class ProcessServiceImpl implements ProcessService {
                 .id(saved.getId())
                 .description(saved.getDescription())
                 .status(saved.getStatus())
+                .imageContentType(saved.getImageContentType())
+                .imageFileName(saved.getImageFileName())
+                .imageSize(saved.getImageSize())
                 .build();
     }
 }

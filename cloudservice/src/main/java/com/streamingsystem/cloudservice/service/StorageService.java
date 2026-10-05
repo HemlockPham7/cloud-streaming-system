@@ -6,10 +6,7 @@ import com.streamingsystem.cloudservice.dto.VideoObjectDTO;
 
 public interface StorageService {
 
-    String uploadFile(FileObjectDTO fileObjectDTO);
-    String uploadImage(ImageObjectDTO imageObjectDTO);
-    String uploadVideo(VideoObjectDTO videoObjectDTO);
-
-    void uploadImage();
-    void uploadVideo();
+    String uploadFile(String bucket, FileObjectDTO fileObjectDTO);
+    String uploadImage(String bucket, ImageObjectDTO imageObjectDTO);
+    String uploadVideo(String bucket, VideoObjectDTO videoObjectDTO);
 }

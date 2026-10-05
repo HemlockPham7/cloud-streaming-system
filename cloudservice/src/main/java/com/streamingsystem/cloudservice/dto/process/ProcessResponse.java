@@ -13,4 +13,7 @@ public class ProcessResponse {
     private Integer id;
     private String description;
     private String status;
+    private String imageContentType;
+    private String imageFileName;
+    private Long imageSize;
 }

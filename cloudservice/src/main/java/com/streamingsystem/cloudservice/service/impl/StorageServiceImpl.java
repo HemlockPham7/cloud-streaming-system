@@ -25,42 +25,8 @@ public class StorageServiceImpl implements StorageService {
     private static final String BUCKET_FOLDER_FOR_VIDEOS = "videos";
     private final S3TransferManager s3TransferManager;
 
-    @Value("${spring.cloud.aws.bucket.sales.name}")
-    private String bucket;
-
     @Override
-    public String uploadFile(FileObjectDTO fileObjectDTO) {
-        String key = BUCKET_FOLDER_FOR_FILES + "/" + fileObjectDTO.name();
-
-        try (InputStream inputStream = fileObjectDTO.data()) {
-            UploadRequest uploadRequest = UploadRequest.builder()
-                    .putObjectRequest(builder -> builder
-                            .bucket(bucket)
-                            .key(key)
-                            .contentType(fileObjectDTO.contentType())
-                            .contentLength(fileObjectDTO.size())
-                    )
-                    .requestBody(
-                            AsyncRequestBody.fromInputStream(inputStream, fileObjectDTO.size(), null)
-                    )
-                    .build();
-
-            Upload upload = s3TransferManager.upload(uploadRequest);
-            CompletedUpload completedUpload = upload.completionFuture().join();
-            log.info(
-                    "File uploaded successfully. bucket={}, key={}, etag={}",
-                    bucket,
-                    key,
-                    completedUpload.response().eTag()
-            );
-            return key;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file", e);
-        }
-    }
-
-    @Override
-    public String uploadImage(ImageObjectDTO imageObjectDTO) {
+    public String uploadImage(String bucket, ImageObjectDTO imageObjectDTO) {
         String key = BUCKET_FOLDER_FOR_IMAGES + "/" + imageObjectDTO.name();
 
         try (InputStream inputStream = imageObjectDTO.data()) {
@@ -92,7 +58,38 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public String uploadVideo(VideoObjectDTO videoObjectDTO) {
+    public String uploadFile(String bucket, FileObjectDTO fileObjectDTO) {
+        String key = BUCKET_FOLDER_FOR_FILES + "/" + fileObjectDTO.name();
+
+        try (InputStream inputStream = fileObjectDTO.data()) {
+            UploadRequest uploadRequest = UploadRequest.builder()
+                    .putObjectRequest(builder -> builder
+                            .bucket(bucket)
+                            .key(key)
+                            .contentType(fileObjectDTO.contentType())
+                            .contentLength(fileObjectDTO.size())
+                    )
+                    .requestBody(
+                            AsyncRequestBody.fromInputStream(inputStream, fileObjectDTO.size(), null)
+                    )
+                    .build();
+
+            Upload upload = s3TransferManager.upload(uploadRequest);
+            CompletedUpload completedUpload = upload.completionFuture().join();
+            log.info(
+                    "File uploaded successfully. bucket={}, key={}, etag={}",
+                    bucket,
+                    key,
+                    completedUpload.response().eTag()
+            );
+            return key;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload file", e);
+        }
+    }
+
+    @Override
+    public String uploadVideo(String bucket, VideoObjectDTO videoObjectDTO) {
         String key = BUCKET_FOLDER_FOR_VIDEOS  + "/" + videoObjectDTO.name();
 
         try (InputStream inputStream = videoObjectDTO.data()) {
@@ -120,15 +117,5 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload video", e);
         }
-    }
-
-    @Override
-    public void uploadImage() {
-
-    }
-
-    @Override
-    public void uploadVideo() {
-
     }
 }
