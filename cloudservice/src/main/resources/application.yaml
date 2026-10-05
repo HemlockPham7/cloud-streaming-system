@@ -23,6 +23,7 @@ spring:
       hibernate:
         jdbc:
           time_zone: Asia/Ho_Chi_Minh
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
@@ -51,7 +52,10 @@ spring:
         path-style-access-enabled: true
 
       bucket:
-        name: sales-info
+        sales:
+          name: sales-info
+        process:
+          name: process-s3-migration
 
 springdoc:
   api-docs:
