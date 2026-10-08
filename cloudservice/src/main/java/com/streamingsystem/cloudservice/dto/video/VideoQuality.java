@@ -7,6 +7,6 @@ public record VideoQuality(
 ) {
 
     public String getResolutionName() {
-        return bitrateKbps + "p"; // Example: "720p", "480p"
+        return height + "p"; // Example: "720p", "480p"
     }
 }

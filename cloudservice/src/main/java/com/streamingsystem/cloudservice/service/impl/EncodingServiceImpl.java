@@ -36,8 +36,8 @@ public class EncodingServiceImpl implements EncodingService {
     private String ffmpegPath;
 
     private static final List<VideoQuality> VIDEO_QUALITIES = List.of(
-            new VideoQuality(1280, 2800, 720), // 720 - 2800k bitrate
-            new VideoQuality(854, 1200, 480)   // 480 - 1200k bitrate
+            new VideoQuality(1280, 720, 2800), // 720 - 2800k bitrate
+            new VideoQuality(854, 480, 1200)   // 480 - 1200k bitrate
     );
 
     private final S3TransferManager s3TransferManager;
