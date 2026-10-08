@@ -1,4 +1,4 @@
-package com.streamingsystem.cloudservice.config;
+package com.streamingsystem.cloudservice.config.cloud;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,11 +35,9 @@ public class S3Config {
         return S3AsyncClient.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
-                        )
-                )
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)
+                ))
                 .forcePathStyle(pathStyleAccessEnabled)
                 .build();
     }
@@ -55,6 +53,9 @@ public class S3Config {
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
                 .region(Region.AP_SOUTHEAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)
+                ))
                 .build();
     }
 }

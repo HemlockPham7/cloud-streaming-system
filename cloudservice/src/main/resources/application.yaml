@@ -7,8 +7,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 2GB
+      max-request-size: 2GB
 
   datasource:
     url: jdbc:postgresql://localhost:5432/streaming
@@ -37,6 +37,15 @@ spring:
     jdbc:
       initialize-schema: always
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: default-group
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   cloud:
     aws:
       region:
@@ -50,15 +59,22 @@ spring:
         endpoint: http://localhost:4566
         region: ap-southeast-1
         path-style-access-enabled: true
+        presigned-url-expiry: 86400
 
       bucket:
         sales:
           name: sales-info
         process:
           name: process-s3-migration
+        streaming:
+          name: streaming
 
 springdoc:
   api-docs:
     version: openapi_3_1
   swagger-ui:
     path: /swagger-ui.html
+
+# FFmpeg configuration
+ffmpeg:
+  path: ${FFMPEG_PATH:C:/ffmpeg/bin/ffmpeg.exe}
