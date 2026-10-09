@@ -48,7 +48,7 @@ public class VideoController {
     public ResponseEntity<GenericPaginationResponse<VideoGetAllResponse>> getAllVideos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(value = "search", required = false) String search
     ) {

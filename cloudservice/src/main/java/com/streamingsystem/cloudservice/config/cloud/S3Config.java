@@ -52,7 +52,8 @@ public class S3Config {
     @Bean
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
-                .region(Region.AP_SOUTHEAST_1)
+                .endpointOverride(URI.create(endpoint))
+                .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)
                 ))
