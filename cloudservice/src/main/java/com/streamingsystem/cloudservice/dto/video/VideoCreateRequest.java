@@ -12,6 +12,10 @@ public record VideoCreateRequest(
         String description,
 
         @Size(max = 50, message = "Category must not exceed 50 characters")
-        String category
+        String category,
+
+        @NotBlank(message = "Author is required")
+        @Size(max = 255, message = "Author must not exceed 255 characters")
+        String author
 ) {
 }
