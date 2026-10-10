@@ -1,35 +1,12 @@
 import { Header } from '@root/components'
 import { useListVideos } from '@root/hooks/video/useListVideos.ts'
 import { useEffect } from 'react'
-
-const formatCount = (count: number) => {
-  return new Intl.NumberFormat('en', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(count)
-}
-
-const formatTimeAgo = (createdAt: string) => {
-  const createdTime = new Date(createdAt).getTime()
-  const now = Date.now()
-  const diff = Math.max(0, now - createdTime)
-
-  const minutes = Math.floor(diff / (1000 * 60))
-  const hours = Math.floor(diff / (1000 * 60 * 60))
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-
-  if (minutes < 1) return 'Just now'
-  if (minutes < 60) return `${minutes} minutes ago`
-  if (hours < 24) return `${hours} hours ago`
-  if (days < 30) return `${days} days ago`
-
-  const months = Math.floor(days / 30)
-  if (months < 12) return `${months} months ago`
-
-  return `${Math.floor(days / 365)} years ago`
-}
+import { formatCount, formatTimeAgo } from '@root/lib/utils.ts'
+import { useNavigate } from 'react-router'
 
 const StreamingDashboard = () => {
+  const navigate = useNavigate()
+
   const { data, isLoading, isError } = useListVideos({
     page: 0,
     size: 10,
@@ -70,6 +47,13 @@ const StreamingDashboard = () => {
             {videos.map((video) => (
               <article
                 key={video.id}
+                onClick={() =>
+                  navigate(`/videos/${video.id}`, {
+                    state: { video },
+                  })
+                }
+                role='link'
+                tabIndex={0}
                 className='group overflow-hidden rounded-2xl bg-white shadow-400 transition duration-300 hover:-translate-y-1 hover:shadow-200'
               >
                 {/* Thumbnail */}

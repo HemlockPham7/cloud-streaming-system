@@ -3,6 +3,7 @@ package com.streamingsystem.cloudservice.service;
 import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoCreateRequest;
 import com.streamingsystem.cloudservice.dto.video.VideoGetAllResponse;
+import com.streamingsystem.cloudservice.dto.video.VideoGetDetailResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoResponse;
 import com.streamingsystem.cloudservice.event.dto.VideoEncodedEvent;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,5 @@ public interface VideoService {
 
     GenericPaginationResponse<VideoGetAllResponse> getAllVideos(String search, Pageable pageable);
     void updateVideoMetadata(UUID videoId, Long viewCount, Long likeCount);
+    VideoGetDetailResponse getDetailVideo(UUID videoId);
 }

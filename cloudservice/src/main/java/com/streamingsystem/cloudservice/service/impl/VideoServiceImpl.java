@@ -5,6 +5,7 @@ import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse
 import com.streamingsystem.cloudservice.dto.pagination.PaginationResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoCreateRequest;
 import com.streamingsystem.cloudservice.dto.video.VideoGetAllResponse;
+import com.streamingsystem.cloudservice.dto.video.VideoGetDetailResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoResponse;
 import com.streamingsystem.cloudservice.entity.VideoEntity;
 import com.streamingsystem.cloudservice.entity.VideoRenditionEntity;
@@ -219,6 +220,39 @@ public class VideoServiceImpl implements VideoService {
         );
     }
 
+    @Override
+    public void updateVideoMetadata(UUID videoId, Long viewCount, Long likeCount) {
+        VideoEntity video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("Video not found with id: " + videoId));
+
+        video.setViewCount(viewCount);
+        video.setLikeCount(likeCount);
+        video.setUpdatedAt(LocalDateTime.now());
+
+        videoRepository.save(video);
+    }
+
+    @Override
+    public VideoGetDetailResponse getDetailVideo(UUID videoId) {
+        VideoEntity video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("Video not found with id: " + videoId));
+        String thumbnailPresignedUrl = generateThumbnailPresignedUrl(video.getThumbnailKey());
+        return VideoGetDetailResponse.builder()
+                .id(video.getId())
+                .title(video.getTitle())
+                .description(video.getDescription())
+                .status(video.getStatus())
+                .author(video.getAuthor())
+                .thumbnailKey(thumbnailPresignedUrl)
+                .thumbnailType(video.getThumbnailType())
+                .category(video.getCategory())
+                .viewCount(video.getViewCount())
+                .likeCount(video.getLikeCount())
+                .createdAt(video.getCreatedAt())
+                .build();
+
+    }
+
     private String generateThumbnailPresignedUrl(String thumbnailKey) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
@@ -231,17 +265,5 @@ public class VideoServiceImpl implements VideoService {
         return s3Presigner.presignGetObject(presignRequest)
                 .url()
                 .toString();
-    }
-
-    @Override
-    public void updateVideoMetadata(UUID videoId, Long viewCount, Long likeCount) {
-        VideoEntity video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new IllegalArgumentException("Video not found with id: " + videoId));
-
-        video.setViewCount(viewCount);
-        video.setLikeCount(likeCount);
-        video.setUpdatedAt(LocalDateTime.now());
-
-        videoRepository.save(video);
     }
 }

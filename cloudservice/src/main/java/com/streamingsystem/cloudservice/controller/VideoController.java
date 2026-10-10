@@ -3,6 +3,7 @@ package com.streamingsystem.cloudservice.controller;
 import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoCreateRequest;
 import com.streamingsystem.cloudservice.dto.video.VideoGetAllResponse;
+import com.streamingsystem.cloudservice.dto.video.VideoGetDetailResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoResponse;
 import com.streamingsystem.cloudservice.service.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -69,5 +70,13 @@ public class VideoController {
     ) {
         videoService.updateVideoMetadata(videoId, viewCount, likeCount);
         return ResponseEntity.status(HttpStatus.OK).body("Successfully updated!");
+    }
+
+    @GetMapping("/getDetail/{videoId}")
+    public ResponseEntity<VideoGetDetailResponse> getDetailVideo(@PathVariable UUID videoId) {
+
+        VideoGetDetailResponse response = videoService.getDetailVideo(videoId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -15,7 +15,7 @@ public class StreamingController {
 
     private final StreamingService streamingService;
 
-    @GetMapping(value = "/{videoId}/playlist", produces = "application/x-mpegURL")
+    @GetMapping(value = "/{videoId}/playlists", produces = "application/x-mpegURL")
     public ResponseEntity<String> getSignedPlaylist(@PathVariable UUID videoId) {
       String signedMasterPlaylist = streamingService.getRewrittenMasterPlaylist(videoId);
 
@@ -36,35 +36,24 @@ public class StreamingController {
                 .body(rewrittenSubPlaylist);
     }
 }
-
+// Example for return of /{videoId}/playlists
 //#EXTM3U
 //#EXT-X-VERSION:3
 //
 //#EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1280x720,CODECS="avc1.42e01e,mp4a.40.2"
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/720p/index.m3u8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151521Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=f7ec9b61f8bec52062b343d22a853106a9178dac33988e44c7a84b6007111cc6
+//http://streaming.localhost:4566/videos/6edc8098-be6d-4ffc-99af-6fe81402362d/hls/720p/index.m3u8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261009T105725Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261009%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=4f7f4f324f74a8dc475b8170e71aa805ea501843d99fc2c1d643266b92e8b122
 //
 //#EXT-X-STREAM-INF:BANDWIDTH=1200000,RESOLUTION=854x480,CODECS="avc1.42e01e,mp4a.40.2"
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/480p/index.m3u8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151521Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=aff763b50cab574d6c21d6be49f708f1a1754e425f7bdcb067ecd3aef7543764
-//#EXTM3U
-//#EXT-X-VERSION:3
-//#EXT-X-TARGETDURATION:14
-//#EXT-X-MEDIA-SEQUENCE:0
-//#EXTINF:13.766667,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/480p/segment_000.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151602Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=ae7245cf32a1dbf465b665372ca45eeb42b643bfa00ed681b64ea02f156f3ad1
-//#EXTINF:8.333333,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/480p/segment_001.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151602Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=b75e173b3b49d165972b89cda26badf0145a6a7c70a7bb0fae11824276c0142c
-//#EXTINF:0.966667,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/480p/segment_002.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151602Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=d7d50b25f4de2fd108f095839a7424341eec8ca51b8b5fb8b659f1430a6e09f0
-//#EXT-X-ENDLIST
-//---------
+//http://streaming.localhost:4566/videos/6edc8098-be6d-4ffc-99af-6fe81402362d/hls/480p/index.m3u8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261009T105725Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261009%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=571308b2808f0aed84d11c7c1600130b960f5f6a09fd6f7506f62725356b9ba5//----------------
+// Example for return of /{videoId}/playlists/{resolution}
 //#EXTM3U
 //#EXT-X-VERSION:3
 //#EXT-X-TARGETDURATION:13
 //#EXT-X-MEDIA-SEQUENCE:0
 //#EXTINF:13.100000,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/720p/segment_000.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151723Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=4eacd0e513166bd7cb47f9c50519d444c383a89e2610c7992b6677876d0702bf
+//http://streaming.localhost:4566/videos/6edc8098-be6d-4ffc-99af-6fe81402362d/hls/720p/segment_000.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261009T170848Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261009%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=e6934bb81a4a73193c7b9f86179ad88b503bb20be18b0038bff7761839eeec0d
 //#EXTINF:8.333333,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/720p/segment_001.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151723Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=9e8e1a5fbecf96c40d0613933ce32cf6bd57201b5de39a0d1ddd26ce6fff82fd
+//http://streaming.localhost:4566/videos/6edc8098-be6d-4ffc-99af-6fe81402362d/hls/720p/segment_001.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261009T170848Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261009%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=aeb91c1d7ae5f65e0503afed2182910e6c51a9bc58ad18716d04d957825bce57
 //#EXTINF:1.633333,
-//https://streaming.s3.ap-southeast-1.amazonaws.com/videos/bf6f0981-15f3-48d7-8fcd-0026f761bb1d/hls/720p/segment_002.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261008T151723Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261008%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=b49997e05e78b27c4fff2dd9ef24d0c3f6f8bcdbb9c3ad99bc113fe576b93d84
+//http://streaming.localhost:4566/videos/6edc8098-be6d-4ffc-99af-6fe81402362d/hls/720p/segment_002.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261009T170849Z&X-Amz-SignedHeaders=host&X-Amz-Credential=test%2F20261009%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Expires=86400&X-Amz-Signature=c89e2c949dfcf34b04e02b0cf6a1ca992cb0b149d050cd52db388abbcb786d00
 //#EXT-X-ENDLIST
