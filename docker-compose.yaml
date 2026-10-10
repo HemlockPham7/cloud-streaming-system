@@ -74,5 +74,29 @@ services:
     ports:
       - "6379:6379"
 
+  elasticsearch:
+    image: elasticsearch:9.0.2
+    container_name: elasticsearch
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data/
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xmx256m -Xms256m
+
+  kibana:
+    image: kibana:9.0.2
+    container_name: kibana
+    ports:
+      - '5601:5601'
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
 volumes:
   floci-data:
+  elastic_data:
