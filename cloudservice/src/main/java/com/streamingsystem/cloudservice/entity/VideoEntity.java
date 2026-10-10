@@ -34,6 +34,21 @@ public class VideoEntity {
     @Column(length = 50)
     private String category;
 
+    @Column(length = 255)
+    private String author;
+
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount;
+
+    @Column(name = "like_count", nullable = false)
+    private Long likeCount;
+
+    @Column(name = "thumbnail_key", length = 500)
+    private String thumbnailKey;
+
+    @Column(name = "thumbnail_type", length = 100)
+    private String thumbnailType;
+
     @Column(name = "original_key", nullable = false, length = 500)
     private String originalKey;
 

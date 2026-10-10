@@ -1,0 +1,6 @@
+ALTER TABLE videos
+    ADD COLUMN author VARCHAR(255),
+    ADD COLUMN view_count BIGINT NOT NULL DEFAULT 0,
+    ADD COLUMN like_count BIGINT NOT NULL DEFAULT 0,
+    ADD COLUMN thumbnail_key VARCHAR(500),
+    ADD COLUMN thumbnail_type VARCHAR(100);
