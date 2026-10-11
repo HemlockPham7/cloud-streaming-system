@@ -26,11 +26,11 @@ public final class Constants {
         public static final String TITLE = "title";
         public static final String DESCRIPTION = "description";
         public static final String AUTHOR = "author";
+        public static final String AUTHOR_RAW = "author.raw";
         public static final String CATEGORY = "category";
+        public static final String CATEGORY_RAW = "category.raw";
         public static final String VIEW_COUNT = "view_count";
         public static final String LIKE_COUNT = "like_count";
-        public static final String THUMBNAIL_KEY = "thumbnail_key";
-        public static final String THUMBNAIL_TYPE = "thumbnail_type";
         public static final String CREATED_AT = "created_at";
     }
 }

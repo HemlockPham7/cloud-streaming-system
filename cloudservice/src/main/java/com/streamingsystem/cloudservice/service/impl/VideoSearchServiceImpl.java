@@ -1,6 +1,10 @@
 package com.streamingsystem.cloudservice.service.impl;
 
 import com.streamingsystem.cloudservice.builder.VideoSuggestionBuilder;
+import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse;
+import com.streamingsystem.cloudservice.dto.pagination.PaginationResponse;
+import com.streamingsystem.cloudservice.dto.video.VideoSearchRequest;
+import com.streamingsystem.cloudservice.dto.video.VideoSearchResponse;
 import com.streamingsystem.cloudservice.event.dto.VideoReadyEvent;
 import com.streamingsystem.cloudservice.model.VideoSearchDocument;
 import com.streamingsystem.cloudservice.model.VideoSuggestionDocument;
@@ -10,9 +14,9 @@ import com.streamingsystem.cloudservice.service.VideoSearchService;
 import com.streamingsystem.cloudservice.util.Constants;
 import com.streamingsystem.cloudservice.util.NativeQueryBuilder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.suggest.Completion;
 import org.springframework.data.elasticsearch.core.suggest.response.Suggest;
 import org.springframework.stereotype.Service;
@@ -76,5 +80,33 @@ public class VideoSearchServiceImpl implements VideoSearchService {
                 .flatMap(line -> line.getOptions().stream())
                 .map(Suggest.Suggestion.Entry.Option::getText)
                 .toList();
+    }
+
+    @Override
+    public GenericPaginationResponse<VideoSearchDocument> searchVideos(VideoSearchRequest request) {
+
+        NativeQuery query = NativeQueryBuilder.toSearchQuery(request);
+        SearchHits<VideoSearchDocument> searchHits = elasticsearchOperations.search(
+                query,
+                VideoSearchDocument.class,
+                Constants.Index.VIDEOS
+        );
+        List<VideoSearchDocument> results = searchHits.getSearchHits()
+                .stream()
+                .map(SearchHit::getContent)
+                .toList();
+        SearchPage<VideoSearchDocument> searchPage = SearchHitSupport
+                .searchPageFor(searchHits, PageRequest.of(request.page(), request.size()));
+
+        PaginationResponse paginationResponse = new PaginationResponse(
+                searchPage.getNumber(),
+                searchPage.getNumberOfElements(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
+        return new GenericPaginationResponse<VideoSearchDocument>(
+                results,
+                paginationResponse
+        );
     }
 }

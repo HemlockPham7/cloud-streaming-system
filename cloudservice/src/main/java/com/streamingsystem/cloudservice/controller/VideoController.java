@@ -1,10 +1,8 @@
 package com.streamingsystem.cloudservice.controller;
 
 import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse;
-import com.streamingsystem.cloudservice.dto.video.VideoCreateRequest;
-import com.streamingsystem.cloudservice.dto.video.VideoGetAllResponse;
-import com.streamingsystem.cloudservice.dto.video.VideoGetDetailResponse;
-import com.streamingsystem.cloudservice.dto.video.VideoResponse;
+import com.streamingsystem.cloudservice.dto.video.*;
+import com.streamingsystem.cloudservice.model.VideoSearchDocument;
 import com.streamingsystem.cloudservice.service.VideoSearchService;
 import com.streamingsystem.cloudservice.service.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +84,21 @@ public class VideoController {
     @GetMapping("/suggestion")
     public ResponseEntity<List<String>> suggest(@RequestParam String prefix) {
         List<String> response = videoSearchService.fetchSuggestions(prefix);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<GenericPaginationResponse<VideoSearchDocument>> searchVideos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(value = "query", required = false) String query
+    ) {
+        VideoSearchRequest request = VideoSearchRequest.builder()
+                .query(query)
+                .page(page)
+                .size(size)
+                .build();
+        GenericPaginationResponse<VideoSearchDocument> response = videoSearchService.searchVideos(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
