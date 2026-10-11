@@ -15,23 +15,18 @@ GET _cat/indices/videos?v
 
 GET videos/_search
 {
-  "size": 5,
-  "_source": [
-    "title",
-    "description",
-    "author"
-  ],
-  "query": {
-    "multi_match": {
-      "query": "Viet Hoang",
-      "fields": [
-        "title^3",
-        "description",
-        "author^2"
-      ],
-      "type": "best_fields",
-      "operator": "or",
-      "fuzziness": "AUTO"
+  "size": 0,
+  "suggest": {
+    "video-suggest": {
+      "prefix": "Viet N",
+      "completion": {
+        "field": "search_term",
+        "size": 5,
+        "skip_duplicates": true,
+        "fuzzy": {
+          "fuzziness": 2
+        }
+      }
     }
   }
 }
@@ -45,29 +40,31 @@ GET videos/_search
       "must": [
         {
           "multi_match": {
-            "query": "Viet nam",
+            "query": "Viet N",
             "fields": [
               "title^3",
               "description",
               "category^2",
               "author^2"
             ],
-            "type": "best_fields",
-            "fuzziness": 1
+            "type": "most_fields",
+            "fuzziness": 1,
+            "prefix_length": 2,
+            "operator": "or"
           }
         }
       ],
       "filter": [
         {
           "range": {
-            "viewCount": {
+            "view_count": {
               "gte": 1000
             }
           }
         },
         {
           "range": {
-            "likeCount": {
+            "like_count": {
               "gte": 100
             }
           }
@@ -78,11 +75,6 @@ GET videos/_search
   "sort": [
     {
       "_score": {
-        "order": "desc"
-      }
-    },
-    {
-      "viewCount": {
         "order": "desc"
       }
     }

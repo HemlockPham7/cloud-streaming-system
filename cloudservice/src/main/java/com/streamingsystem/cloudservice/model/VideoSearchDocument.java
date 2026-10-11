@@ -15,6 +15,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setting(settingPath = "/elasticsearch/videos-settings.json")
+@Mapping(mappingPath = "/elasticsearch/videos-mappings.json")
 public class VideoSearchDocument {
 
     @Id
@@ -29,7 +31,7 @@ public class VideoSearchDocument {
     )
     private String title;
 
-    @Field(type = FieldType.Text, analyzer = "standard")
+    @Field(type = FieldType.Text, analyzer = "custom_description_analyzer")
     private String description;
 
     @MultiField(
@@ -41,10 +43,10 @@ public class VideoSearchDocument {
     )
     private String author;
 
-    @Field(type = FieldType.Keyword)
+    @Field(name = "thumbnail_key", type = FieldType.Keyword)
     private String thumbnailKey;
 
-    @Field(type = FieldType.Keyword)
+    @Field(name = "thumbnail_type", type = FieldType.Keyword)
     private String thumbnailType;
 
     @MultiField(
@@ -56,13 +58,14 @@ public class VideoSearchDocument {
     )
     private String category;
 
-    @Field(type = FieldType.Long)
+    @Field(name = "view_count", type = FieldType.Long)
     private Long viewCount;
 
-    @Field(type = FieldType.Long)
+    @Field(name = "like_count", type = FieldType.Long)
     private Long likeCount;
 
     @Field(
+            name = "created_at",
             type = FieldType.Date,
             format = {},
             pattern = "uuuu-MM-dd'T'HH:mm:ss.SSSSSS"
