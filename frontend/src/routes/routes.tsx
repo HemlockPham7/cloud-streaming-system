@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 import Navbar from '@root/routes/layout/Navbar.tsx'
 import StreamingDashboard from '@root/routes/streaming/StreamingDashboard.tsx'
 import StreamingVideoDetail from '@root/routes/streaming/StreamingVideoDetail.tsx'
+import StreamingSearchPage from '@root/routes/streaming/StreamingSearchPage.tsx'
 
 const routes = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const routes = createBrowserRouter([
       {
         path: '/videos/:videoId',
         Component: StreamingVideoDetail,
+      },
+      {
+        path: '/videos/search',
+        Component: StreamingSearchPage,
       },
     ],
   },

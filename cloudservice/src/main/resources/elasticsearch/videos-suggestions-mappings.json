@@ -1,0 +1,7 @@
+{
+  "properties": {
+    "search_term": {
+      "type": "completion"
+    }
+  }
+}
