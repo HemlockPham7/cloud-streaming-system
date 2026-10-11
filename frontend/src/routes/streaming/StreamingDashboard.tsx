@@ -9,7 +9,7 @@ const StreamingDashboard = () => {
 
   const { data, isLoading, isError } = useListVideos({
     page: 0,
-    size: 10,
+    size: 9,
   })
 
   useEffect(() => {

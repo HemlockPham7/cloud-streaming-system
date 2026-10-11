@@ -2,7 +2,6 @@ package com.streamingsystem.cloudservice.controller;
 
 import com.streamingsystem.cloudservice.dto.pagination.GenericPaginationResponse;
 import com.streamingsystem.cloudservice.dto.video.*;
-import com.streamingsystem.cloudservice.model.VideoSearchDocument;
 import com.streamingsystem.cloudservice.service.VideoSearchService;
 import com.streamingsystem.cloudservice.service.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +87,7 @@ public class VideoController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<GenericPaginationResponse<VideoSearchDocument>> searchVideos(
+    public ResponseEntity<GenericPaginationResponse<VideoSearchResponse>> searchVideos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(value = "query", required = false) String query
@@ -98,7 +97,7 @@ public class VideoController {
                 .page(page)
                 .size(size)
                 .build();
-        GenericPaginationResponse<VideoSearchDocument> response = videoSearchService.searchVideos(request);
+        GenericPaginationResponse<VideoSearchResponse> response = videoSearchService.searchVideos(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

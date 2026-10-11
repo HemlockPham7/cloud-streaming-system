@@ -5,6 +5,12 @@ export const sidebarItems = [
     label: 'Dashboard',
     href: '/',
   },
+  {
+    id: 2,
+    icon: '/assets/icons/home.svg',
+    label: 'Search Video',
+    href: '/videos/search',
+  },
 ]
 
 export const CONFETTI_SETTINGS = {
