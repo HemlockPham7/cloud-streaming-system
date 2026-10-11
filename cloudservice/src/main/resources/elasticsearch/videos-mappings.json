@@ -1,0 +1,51 @@
+{
+  "properties": {
+    "title": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "analyzer": "custom_description_analyzer"
+    },
+    "author": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "thumbnail_key": {
+      "type": "keyword"
+    },
+    "thumbnail_type": {
+      "type": "keyword"
+    },
+    "category": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "view_count": {
+      "type": "long"
+    },
+    "like_count": {
+      "type": "long"
+    },
+    "created_at": {
+      "type": "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSSSSS"
+    }
+  }
+}

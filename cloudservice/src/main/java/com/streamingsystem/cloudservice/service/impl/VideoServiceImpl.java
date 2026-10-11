@@ -10,6 +10,7 @@ import com.streamingsystem.cloudservice.dto.video.VideoResponse;
 import com.streamingsystem.cloudservice.entity.VideoEntity;
 import com.streamingsystem.cloudservice.entity.VideoRenditionEntity;
 import com.streamingsystem.cloudservice.event.dto.VideoEncodedEvent;
+import com.streamingsystem.cloudservice.event.dto.VideoReadyEvent;
 import com.streamingsystem.cloudservice.event.dto.VideoUploadedEvent;
 import com.streamingsystem.cloudservice.repository.VideoRenditionRepository;
 import com.streamingsystem.cloudservice.repository.VideoRepository;
@@ -17,6 +18,7 @@ import com.streamingsystem.cloudservice.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -55,6 +57,7 @@ public class VideoServiceImpl implements VideoService {
     private final S3TransferManager s3TransferManager;
     private final S3Presigner s3Presigner;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public VideoResponse uploadVideo(MultipartFile file, MultipartFile thumbnail, VideoCreateRequest request) {
@@ -185,6 +188,20 @@ public class VideoServiceImpl implements VideoService {
 
         videoRenditionRepository.saveAll(renditions);
         log.info("Successfully updated video status to READY and saved {} renditions for videoId: {}", renditions.size(), event.videoId());
+
+        VideoReadyEvent videoReadyEvent = VideoReadyEvent.builder()
+                .videoId(video.getId())
+                .title(video.getTitle())
+                .description(video.getDescription())
+                .author(video.getAuthor())
+                .category(video.getCategory())
+                .thumbnailKey(video.getThumbnailKey())
+                .thumbnailType(video.getThumbnailType())
+                .viewCount(video.getViewCount())
+                .likeCount(video.getLikeCount())
+                .createdAt(video.getCreatedAt())
+                .build();
+        applicationEventPublisher.publishEvent(videoReadyEvent);
     }
 
     @Override

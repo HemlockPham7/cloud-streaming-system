@@ -5,6 +5,7 @@ import com.streamingsystem.cloudservice.dto.video.VideoCreateRequest;
 import com.streamingsystem.cloudservice.dto.video.VideoGetAllResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoGetDetailResponse;
 import com.streamingsystem.cloudservice.dto.video.VideoResponse;
+import com.streamingsystem.cloudservice.service.VideoSearchService;
 import com.streamingsystem.cloudservice.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +26,7 @@ import java.util.UUID;
 public class VideoController {
 
     private final VideoService videoService;
+    private final VideoSearchService videoSearchService;
 
     @PostMapping(
             value = "/upload",
@@ -77,6 +80,12 @@ public class VideoController {
 
         VideoGetDetailResponse response = videoService.getDetailVideo(videoId);
 
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/suggestion")
+    public ResponseEntity<List<String>> suggest(@RequestParam String prefix) {
+        List<String> response = videoSearchService.fetchSuggestions(prefix);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
