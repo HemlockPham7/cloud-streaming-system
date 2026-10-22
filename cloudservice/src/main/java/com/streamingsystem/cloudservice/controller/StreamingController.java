@@ -15,6 +15,14 @@ public class StreamingController {
 
     private final StreamingService streamingService;
 
+    @GetMapping(value = "/{videoId}/playlist", produces = "application/x-mpegURL")
+    public ResponseEntity<String> getMasterPlaylist(@PathVariable UUID videoId) {
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/x-mpegURL")
+                .body(null);
+    }
+
     @GetMapping(value = "/{videoId}/playlists", produces = "application/x-mpegURL")
     public ResponseEntity<String> getSignedPlaylist(@PathVariable UUID videoId) {
       String signedMasterPlaylist = streamingService.getRewrittenMasterPlaylist(videoId);

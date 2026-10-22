@@ -69,6 +69,10 @@ spring:
         streaming:
           name: streaming
 
+app:
+  cloudfront:
+    base-url: http://ekyv6n0z002g1o.cloudfront.localhost.floci.io:4566
+
 springdoc:
   api-docs:
     version: openapi_3_1
