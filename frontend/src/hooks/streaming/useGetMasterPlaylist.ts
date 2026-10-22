@@ -1,23 +1,25 @@
 import streamingApi from '@root/api/video/videoAxios.ts'
 import { useQuery } from '@tanstack/react-query'
 
-const getMasterPlaylist = async (videoId: string): Promise<string> => {
-  const response = await streamingApi.get<string>(
-    `/streaming/${videoId}/playlists`,
-    {
-      headers: {
-        Accept: 'application/x-mpegURL',
-      },
-      responseType: 'text',
-    },
+export interface GetStreamingResponse {
+  masterPlaylistPath: string
+  masterPlaylistContent: string
+  basePath: string
+}
+
+const getMasterPlaylist = async (
+  videoId: string,
+): Promise<GetStreamingResponse> => {
+  const response = await streamingApi.get<GetStreamingResponse>(
+    `/streaming/${videoId}/playlist`,
   )
 
   return response.data
 }
 
 export const useGetMasterPlaylist = (videoId: string) => {
-  return useQuery<string, Error>({
-    queryKey: ['masterPlaylist'],
+  return useQuery<GetStreamingResponse, Error>({
+    queryKey: ['masterPlaylist', videoId],
     queryFn: () => getMasterPlaylist(videoId),
   })
 }

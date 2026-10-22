@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useGetDetailVideo } from '@root/hooks/video/useGetDetailVideo.ts'
 import Hls from 'hls.js'
-import { formatCount, formatTimeAgo } from '@root/lib/utils.ts'
 import {
   useGetSubPlaylist,
   type VideoResolution,
@@ -122,82 +121,6 @@ const StreamingVideoDetail = () => {
             </button>
           </div>
         </div>
-
-        {videoData && (
-          <div className='flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-sm'>
-            <div className='flex items-center gap-3 border-gray-100 py-3 text-sm text-gray-500'>
-              <div className='flex size-9 items-center justify-center rounded-full bg-primary-50 font-bold uppercase text-primary-500'>
-                {videoData.author?.charAt(0) || '?'}
-              </div>
-              <div className='flex-1'>
-                <p className='font-semibold text-gray-800'>
-                  {videoData.author}
-                </p>
-                <p className='text-xs text-gray-400'>
-                  Uploaded {formatTimeAgo(videoData.createdAt)}
-                </p>
-              </div>
-
-              <div className='flex items-center gap-4 text-xs font-medium'>
-                <span className='inline-flex items-center gap-1.5'>
-                  <svg
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='1.8'
-                    className='size-4'
-                    aria-hidden='true'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z'
-                    />
-                    <circle cx='12' cy='12' r='3' />
-                  </svg>
-                  <span>{formatCount(videoData.viewCount)} views</span>
-                </span>
-                <span className='inline-flex items-center gap-1.5'>
-                  <svg
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='1.8'
-                    className='size-4'
-                    aria-hidden='true'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M7 10v11H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3Zm0 0 5-8a3 3 0 0 1 2 3l-1 5h5a3 3 0 0 1 3 3l-2 7a3 3 0 0 1-3 2H7'
-                    />
-                  </svg>
-                  <span>{formatCount(videoData.likeCount)} likes</span>
-                </span>
-              </div>
-            </div>
-
-            <div className='flex items-start justify-between gap-4'>
-              <div>
-                <h1 className='text-xl font-bold text-dark-100'>
-                  {videoData.title}
-                </h1>
-                <p className='mt-1 whitespace-pre-line text-sm text-gray-600 leading-relaxed'>
-                  {videoData.description || 'No description provided.'}
-                </p>
-              </div>
-
-              <div>
-                <span className='mb-2 inline-block rounded-md bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-600'>
-                  {videoData.category}
-                </span>
-                <span className='rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600'>
-                  {videoData.status}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
       </section>
     </main>
   )

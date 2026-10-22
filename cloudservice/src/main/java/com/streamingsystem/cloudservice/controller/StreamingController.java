@@ -1,8 +1,10 @@
 package com.streamingsystem.cloudservice.controller;
 
+import com.streamingsystem.cloudservice.dto.streaming.StreamingResponse;
 import com.streamingsystem.cloudservice.service.StreamingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,13 @@ import java.util.UUID;
 public class StreamingController {
 
     private final StreamingService streamingService;
+
+    @GetMapping( "/{videoId}/playlist")
+    public ResponseEntity<StreamingResponse> getMasterPlaylist(@PathVariable UUID videoId) {
+        StreamingResponse response = streamingService.getMasterPlaylist(videoId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     @GetMapping(value = "/{videoId}/playlists", produces = "application/x-mpegURL")
     public ResponseEntity<String> getSignedPlaylist(@PathVariable UUID videoId) {
