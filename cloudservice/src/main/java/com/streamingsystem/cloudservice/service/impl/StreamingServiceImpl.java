@@ -1,6 +1,7 @@
 package com.streamingsystem.cloudservice.service.impl;
 
 import com.streamingsystem.cloudservice.dto.VideoStatus;
+import com.streamingsystem.cloudservice.dto.streaming.StreamingResponse;
 import com.streamingsystem.cloudservice.entity.VideoEntity;
 import com.streamingsystem.cloudservice.repository.VideoRepository;
 import com.streamingsystem.cloudservice.service.StreamingService;
@@ -40,9 +41,22 @@ public class StreamingServiceImpl implements StreamingService {
     @Value("${spring.cloud.aws.s3.presigned-url-expiry:86400}")
     private long presignedUrlExpirySeconds;
 
+    @Value("${app.cloudfront.base-url}")
+    private String cloudFrontBaseUrl;
+
     private static final String MASTER_KEY_CACHE_PREFIX = "streaming:master_key:";
     private static final String PLAYLIST_CONTENT_CACHE_PREFIX = "streaming:playlist_cache:";
     private static final String SUB_M3U8_CACHE_PREFIX = "streaming:sub_m3u8:";
+
+    @Override
+    public StreamingResponse getMasterPlaylist(UUID videoId) {
+        String masterKey = getOrCacheMasterKey(videoId);
+        String masterPlaylist = readFromS3UsingTransferManager(masterKey);
+        return StreamingResponse.builder()
+                .masterPlaylist(masterPlaylist)
+                .basePath(cloudFrontBaseUrl)
+                .build();
+    }
 
     /**
      * Get streaming URL for a video
