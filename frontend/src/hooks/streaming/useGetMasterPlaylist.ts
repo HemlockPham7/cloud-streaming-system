@@ -2,7 +2,8 @@ import streamingApi from '@root/api/video/videoAxios.ts'
 import { useQuery } from '@tanstack/react-query'
 
 export interface GetStreamingResponse {
-  masterPlaylist: string
+  masterPlaylistPath: string
+  masterPlaylistContent: string
   basePath: string
 }
 

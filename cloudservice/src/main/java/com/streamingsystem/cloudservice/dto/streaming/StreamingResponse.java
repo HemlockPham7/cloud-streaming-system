@@ -4,7 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record StreamingResponse (
-        String masterPlaylist,
+        String masterPlaylistPath,
+        String masterPlaylistContent,
         String basePath
 ) {
 }

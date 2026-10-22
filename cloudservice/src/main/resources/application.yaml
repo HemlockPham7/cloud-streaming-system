@@ -72,6 +72,7 @@ spring:
 app:
   cloudfront:
     base-url: http://ekyv6n0z002g1o.cloudfront.localhost.floci.io:4566
+    distribution-id: EKYV6N0Z002G1O
 
 springdoc:
   api-docs:

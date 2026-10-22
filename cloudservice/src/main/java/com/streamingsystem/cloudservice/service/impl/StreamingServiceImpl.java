@@ -50,10 +50,11 @@ public class StreamingServiceImpl implements StreamingService {
 
     @Override
     public StreamingResponse getMasterPlaylist(UUID videoId) {
-        String masterKey = getOrCacheMasterKey(videoId);
-        String masterPlaylist = readFromS3UsingTransferManager(masterKey);
+        String masterPlaylistPath = getOrCacheMasterKey(videoId);
+        String masterPlaylistContent = readFromS3UsingTransferManager(masterPlaylistPath);
         return StreamingResponse.builder()
-                .masterPlaylist(masterPlaylist)
+                .masterPlaylistPath(masterPlaylistPath)
+                .masterPlaylistContent(masterPlaylistContent)
                 .basePath(cloudFrontBaseUrl)
                 .build();
     }
