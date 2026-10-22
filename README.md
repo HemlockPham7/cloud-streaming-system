@@ -11,7 +11,7 @@ Cloud Streaming System is a high-performance movie streaming platform designed t
 
 - **Adaptive Bitrate Streaming**: Utilizes the HLS protocol integrated with a global Content Delivery Network (CDN) to dynamically adjust video quality based on network conditions, achieving a playback startup time of under 3 seconds.
 - **CDC-Driven Search & Auto-Suggestion Pipeline**: Implements a real-time data synchronization pipeline using the CQRS pattern. Database changes are captured via CDC and streamed to the search engine, achieving an index synchronization time of under 2 seconds.
-- **High-Throughput Search Engine**: Capable of processing up to 1000 queries per second (QPS) while maintaining a P95 search latency of under 100ms.
+- **High-Throughput Search Engine**: Capable of processing up to 3000 queries per second (QPS) while maintaining a P95 search latency of under 200ms.
 
 ### 1.3 Tech stack:
 
